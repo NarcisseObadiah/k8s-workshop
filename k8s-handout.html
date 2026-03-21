@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kubernetes Workshop — Participant Handout</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 12px; color: #1a1a1a; background: #fff; }
+  .page { max-width: 210mm; margin: 0 auto; padding: 12mm 15mm; }
+
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1a1a1a; padding-bottom: 8px; margin-bottom: 12px; }
+  .header-left h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-left p { font-size: 11px; color: #555; margin-top: 2px; }
+  .header-right { text-align: right; font-size: 10px; color: #555; line-height: 1.7; }
+  .image-pill { display: inline-block; background: #f0f0f0; border: 0.5px solid #ccc; border-radius: 3px; padding: 1px 6px; font-family: 'Courier New', monospace; font-size: 10px; color: #333; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+
+  .section { margin-bottom: 12px; }
+  .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #555; border-bottom: 0.5px solid #ccc; padding-bottom: 3px; margin-bottom: 7px; }
+
+  .concept-table { width: 100%; border-collapse: collapse; }
+  .concept-table td { padding: 3px 5px; vertical-align: top; border-bottom: 0.5px solid #eee; font-size: 11px; line-height: 1.5; }
+  .concept-table td:first-child { font-weight: 700; white-space: nowrap; padding-right: 8px; width: 95px; color: #1a1a1a; }
+  .concept-table td:last-child { color: #333; }
+
+  .step-list { list-style: none; }
+  .step-list li { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; font-size: 11px; line-height: 1.5; border-bottom: 0.5px solid #f0f0f0; }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; border-radius: 50%; background: #1a1a1a; color: #fff; font-size: 9px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .step-label { font-weight: 700; }
+  .step-cmd { font-family: 'Courier New', monospace; font-size: 9.5px; color: #555; display: block; margin-top: 1px; }
+
+  .cheat-item { background: #f8f8f8; border-radius: 3px; padding: 4px 7px; }
+  .cheat-item .clabel { font-size: 9px; color: #777; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
+  .cheat-item .cval { font-family: 'Courier New', monospace; font-size: 10px; color: #1a1a1a; line-height: 1.5; }
+
+  .arch-box { border: 1px solid #ccc; border-radius: 4px; padding: 6px 9px; }
+  .arch-box .box-title { font-size: 10px; font-weight: 700; margin-bottom: 4px; }
+  .arch-box ul { list-style: none; }
+  .arch-box ul li { font-size: 10px; color: #333; line-height: 1.65; padding-left: 10px; position: relative; }
+  .arch-box ul li::before { content: '›'; position: absolute; left: 0; color: #aaa; }
+  .arch-box.dark { background: #1a1a1a; border-color: #1a1a1a; }
+  .arch-box.dark .box-title { color: #fff; }
+  .arch-box.dark ul li { color: #ccc; }
+  .arch-box.dark ul li::before { color: #666; }
+
+  .callout { background: #f8f8f8; border-left: 2px solid #1a1a1a; border-radius: 0 3px 3px 0; padding: 6px 9px; margin-bottom: 7px; }
+  .callout .callout-title { font-size: 10px; font-weight: 700; margin-bottom: 3px; }
+  .callout p { font-size: 10px; color: #444; line-height: 1.6; }
+
+  .yaml-block { background: #f4f4f4; border-left: 2px solid #555; border-radius: 0 3px 3px 0; padding: 6px 9px; font-family: 'Courier New', monospace; font-size: 9.5px; line-height: 1.75; color: #1a1a1a; margin-bottom: 5px; }
+  .yaml-block .key { color: #185FA5; }
+  .yaml-block .val { color: #3B6D11; }
+  .yaml-block .comment { color: #999; }
+
+  .next-item { font-size: 11px; padding: 2px 0; border-bottom: 0.5px solid #f0f0f0; line-height: 1.55; }
+  .next-item:last-child { border-bottom: none; }
+  .next-item strong { font-weight: 700; margin-right: 4px; }
+
+  .mindset-row { display: flex; gap: 0; margin-bottom: 5px; border: 0.5px solid #e0e0e0; border-radius: 4px; overflow: hidden; font-size: 10px; }
+  .mindset-col { flex: 1; padding: 5px 8px; }
+  .mindset-col:first-child { background: #f8f8f8; border-right: 0.5px solid #e0e0e0; }
+  .mindset-col .mlabel { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #888; margin-bottom: 3px; }
+  .mindset-col .mval { font-family: 'Courier New', monospace; font-size: 9.5px; color: #333; line-height: 1.6; }
+
+  .footer { border-top: 0.5px solid #ccc; padding-top: 5px; margin-top: 8px; display: flex; justify-content: space-between; font-size: 9px; color: #aaa; }
+
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { padding: 10mm 13mm; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-left">
+      <h1>Kubernetes Workshop</h1>
+      <p>Participant handout &nbsp;·&nbsp; 42 Heilbronn &nbsp;·&nbsp; Cloud-native track</p>
+    </div>
+    <div class="header-right">
+      Platform: <strong>KillerKoda</strong> &nbsp;·&nbsp; Duration: <strong>3 hours</strong><br>
+      Image: <span class="image-pill">ghcr.io/narcisseobadiah/k8s-workshop-demo:latest</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <div class="section">
+        <div class="section-title">Core concepts</div>
+        <table class="concept-table">
+          <tr><td>Pod</td><td>Smallest deployable unit. One or more containers sharing network &amp; storage.</td></tr>
+          <tr><td>Deployment</td><td>Declares desired state. Manages replicas, rolling updates, and rollbacks.</td></tr>
+          <tr><td>ReplicaSet</td><td>Keeps N identical pods running. Managed automatically by Deployment.</td></tr>
+          <tr><td>Service</td><td>Stable network endpoint. Routes traffic to pods via label selectors.</td></tr>
+          <tr><td>Namespace</td><td>Virtual cluster for isolation — scopes resources, quotas, and access.</td></tr>
+          <tr><td>Node</td><td>Worker machine (VM or bare metal) that runs pods.</td></tr>
+          <tr><td>etcd</td><td>Key-value store. Single source of truth for all cluster state.</td></tr>
+          <tr><td>kubelet</td><td>Agent on each node. Executes pod specs, reports health to API server.</td></tr>
+          <tr><td>Scheduler</td><td>Picks which node fits a new pod based on resources &amp; constraints.</td></tr>
+          <tr><td>Controller mgr</td><td>Reconciliation loop — constantly drives actual state toward desired state.</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Cluster architecture</div>
+        <div class="grid" style="gap:7px">
+          <div class="arch-box dark">
+            <div class="box-title">Control plane</div>
+            <ul>
+              <li>API server</li>
+              <li>Scheduler</li>
+              <li>Controller manager</li>
+              <li>etcd</li>
+            </ul>
+          </div>
+          <div class="arch-box">
+            <div class="box-title">Worker node</div>
+            <ul>
+              <li>kubelet</li>
+              <li>kube-proxy</li>
+              <li>Container runtime</li>
+              <li>Pods</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Imperative vs declarative</div>
+        <div class="mindset-row">
+          <div class="mindset-col">
+            <div class="mlabel">Imperative — quick experiments</div>
+            <div class="mval">kubectl create deployment ...<br>kubectl scale ... --replicas=4<br>kubectl expose ...</div>
+          </div>
+          <div class="mindset-col">
+            <div class="mlabel">Declarative — production &amp; teams</div>
+            <div class="mval">Write YAML manifest<br>kubectl apply -f deploy.yaml<br>Git commit = source of truth</div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#555;line-height:1.6">With <code style="font-size:9.5px">apply</code>, Kubernetes diffs the current state against your manifest and makes only the necessary changes — safe to re-run at any time.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Resource requests &amp; limits</div>
+        <div class="yaml-block">
+<span class="key">resources:</span>
+  <span class="key">requests:</span>
+    <span class="key">cpu:</span> <span class="val">"100m"</span>    <span class="comment"># scheduler uses this</span>
+    <span class="key">memory:</span> <span class="val">"128Mi"</span>
+  <span class="key">limits:</span>
+    <span class="key">cpu:</span> <span class="val">"250m"</span>    <span class="comment"># hard cap — throttled</span>
+    <span class="key">memory:</span> <span class="val">"256Mi"</span>  <span class="comment"># hard cap — OOMKilled</span>
+        </div>
+        <table class="concept-table" style="margin-top:4px">
+          <tr><td style="width:55px">100m CPU</td><td>0.1 of a core. 1000m = 1 full core.</td></tr>
+          <tr><td>requests</td><td>Used by scheduler to find a node with enough capacity.</td></tr>
+          <tr><td>limits</td><td>Runtime enforcement. CPU = throttled. Memory = pod killed.</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Namespaces</div>
+        <table class="concept-table">
+          <tr><td style="width:110px">kubectl get ns</td><td>List all namespaces in the cluster.</td></tr>
+          <tr><td>-n &lt;ns&gt;</td><td>Scope any command to a specific namespace.</td></tr>
+          <tr><td>--all-namespaces</td><td>Show resources across every namespace.</td></tr>
+          <tr><td>delete namespace</td><td>Deletes the namespace and everything inside it.</td></tr>
+        </table>
+        <p style="font-size:10px;color:#555;margin-top:4px;line-height:1.6">Default namespaces: <code style="font-size:9.5px">default</code>, <code style="font-size:9.5px">kube-system</code>, <code style="font-size:9.5px">kube-public</code>. Real clusters use per-team or per-env namespaces with quotas and access controls.</p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <div class="section">
+        <div class="section-title">Lab steps &nbsp;(75 min)</div>
+        <ul class="step-list">
+          <li>
+            <span class="step-num">1</span>
+            <div>
+              <span class="step-label">Deploy — imperative</span> Get the app running fast with kubectl.<br>
+              <span class="step-cmd">kubectl create deployment k8s-demo --image=ghcr.io/narcisseobadiah/k8s-workshop-demo:latest --port=3000</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div>
+              <span class="step-label">Declarative YAML</span> Delete the deployment, rewrite as a manifest with resource requests &amp; limits, apply it.<br>
+              <span class="step-cmd">kubectl delete deployment k8s-demo</span><br>
+              <span class="step-cmd">kubectl apply -f deployment.yaml</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div>
+              <span class="step-label">Namespaces</span> Create a <code style="font-size:9.5px">workshop</code> namespace, deploy there, compare visibility, clean up.<br>
+              <span class="step-cmd">kubectl create namespace workshop</span><br>
+              <span class="step-cmd">kubectl apply -f deployment.yaml -n workshop</span><br>
+              <span class="step-cmd">kubectl get pods --all-namespaces</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <div>
+              <span class="step-label">Expose as Service</span> Add a NodePort Service to the manifest, apply, open in KillerKoda traffic panel.<br>
+              <span class="step-cmd">kubectl apply -f deployment.yaml &amp;&amp; kubectl get svc k8s-demo</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">5</span>
+            <div>
+              <span class="step-label">Scale &amp; self-heal</span> Scale to 4 replicas via YAML, delete a pod, watch Kubernetes replace it.<br>
+              <span class="step-cmd">kubectl apply -f deployment.yaml &nbsp;# after editing replicas: 4</span><br>
+              <span class="step-cmd">kubectl delete pod &lt;name&gt; &amp;&amp; kubectl get pods -w</span>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">6</span>
+            <div>
+              <span class="step-label">Rolling update</span> Trigger an image update, watch pods replaced one-by-one, check history.<br>
+              <span class="step-cmd">kubectl set image deployment/k8s-demo k8s-workshop-demo=...latest</span><br>
+              <span class="step-cmd">kubectl rollout status deployment/k8s-demo</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Essential commands</div>
+        <div class="grid-3">
+          <div class="cheat-item"><div class="clabel">List resources</div><div class="cval">kubectl get pods / svc / deploy</div></div>
+          <div class="cheat-item"><div class="clabel">Inspect</div><div class="cval">kubectl describe pod &lt;name&gt;</div></div>
+          <div class="cheat-item"><div class="clabel">Stream logs</div><div class="cval">kubectl logs &lt;pod&gt; -f</div></div>
+          <div class="cheat-item"><div class="clabel">Shell into pod</div><div class="cval">kubectl exec -it &lt;pod&gt; -- sh</div></div>
+          <div class="cheat-item"><div class="clabel">Apply manifest</div><div class="cval">kubectl apply -f file.yaml</div></div>
+          <div class="cheat-item"><div class="clabel">Watch live</div><div class="cval">kubectl get pods -w</div></div>
+          <div class="cheat-item"><div class="clabel">Raw YAML</div><div class="cval">kubectl get deploy &lt;n&gt; -o yaml</div></div>
+          <div class="cheat-item"><div class="clabel">Rollout history</div><div class="cval">kubectl rollout history deploy/&lt;n&gt;</div></div>
+          <div class="cheat-item"><div class="clabel">Rollback</div><div class="cval">kubectl rollout undo deploy/&lt;n&gt;</div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">What happened under the hood</div>
+        <table class="concept-table">
+          <tr><td style="width:115px">create / apply</td><td>API server saved desired state to etcd; scheduler placed pod; kubelet pulled image</td></tr>
+          <tr><td>resources.requests</td><td>Scheduler used these to find a node with enough free capacity</td></tr>
+          <tr><td>resources.limits</td><td>kubelet enforces at runtime — CPU throttled, memory OOMKills the pod</td></tr>
+          <tr><td>namespace created</td><td>Logical boundary — own quota, network policy, and RBAC scope</td></tr>
+          <tr><td>expose / Service</td><td>kube-proxy set up rules to forward traffic to any matching pod</td></tr>
+          <tr><td>delete pod</td><td>Controller detected actual &lt; desired; replacement pod created in seconds</td></tr>
+          <tr><td>set image</td><td>New ReplicaSet created; pods replaced one-by-one — zero downtime</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-title">What to explore next</div>
+        <div class="next-item"><strong>ConfigMap</strong> Inject config into pods without rebuilding images.</div>
+        <div class="next-item"><strong>Secret</strong> Store passwords and tokens — base64 encoded, RBAC controlled.</div>
+        <div class="next-item"><strong>Liveness probe</strong> Kubernetes restarts pods that fail a health check endpoint.</div>
+        <div class="next-item"><strong>Ingress</strong> HTTP routing — hostnames, paths, TLS termination.</div>
+        <div class="next-item"><strong>Helm</strong> Package manager — deploy complex apps as versioned charts.</div>
+        <div class="next-item"><strong>HPA</strong> Horizontal Pod Autoscaler — scale automatically on CPU/memory.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Kubernetes Workshop &nbsp;·&nbsp; 42 Heilbronn &nbsp;·&nbsp; Narcisse Obadiah</span>
+    <span>Image: ghcr.io/narcisseobadiah/k8s-workshop-demo:latest &nbsp;·&nbsp; Platform: KillerKoda</span>
+  </div>
+
+</div>
+</body>
+</html>
