@@ -6,7 +6,8 @@
 
 ## Before you start
 
-Open your browser and go to **[killercoda.com](https://killercoda.com)** → pick the **Kubernetes** playground (1 node or 2 nodes).
+Open your browser and go to **[killercoda.com](https://killercoda.com/playgrounds/course/kubernetes-playgrounds
+)** → pick the **Kubernetes** playground (1 node or 2 nodes).
 
 Once the terminal is ready, verify your cluster:
 
@@ -118,7 +119,7 @@ kubectl get pods -w
 Change the replica count from 1 to 2 by editing the file:
 
 ```bash
-sed -i 's/replicas: 1/replicas: 2/' deployment.yaml
+vi/nano deployment.yaml
 kubectl apply -f deployment.yaml
 kubectl get pods
 ```
@@ -267,7 +268,7 @@ You'll see: `Terminating` → a new pod immediately enters `Pending` → `Contai
 
 ```bash
 kubectl set image deployment/k8s-demo \
-  k8s-workshop-demo=ghcr.io/narcisseobadiah/k8s-workshop-demo:latest
+  k8s-workshop-demo=ghcr.io/narcisseobadiah/k8s-workshop-demo:v2
 ```
 
 ### 6.2 Watch the rollout
@@ -297,11 +298,8 @@ kubectl logs -l app=k8s-demo --follow
 # Open a shell inside a running pod
 kubectl exec -it <pod-name> -- /bin/sh
 
-# Check resource usage per pod (if metrics-server is available)
-kubectl top pods
-
 # See resource requests & limits on running pods
-kubectl describe pod <pod-name> | grep -A6 "Requests\|Limits"
+kubectl describe pod <pod-name> 
 
 # Roll back to the previous version
 kubectl rollout undo deployment/k8s-demo
